@@ -1,42 +1,36 @@
 #include "Animal.hpp"
 
-// Constructors
 Animal::Animal():_type("default")
 {
-	std::cout << "Animal Default Constructor called" << std::endl;
+    std::cout << "Animal Default Constructor called" << std::endl;
 }
 
-Animal::Animal(const Animal &copy)
+Animal::Animal(const Animal &copyAnimal)
 {
-	std::cout << "Animal Copy Constructor called" << std::endl;
-	*this = copy;
+    std::cout << "Animal Copy Constructor called" << std::endl;
+    *this = copyAnimal;
 }
 
-// Deconstructors
 Animal::~Animal()
 {
-	std::cout << "Animal Deconstructor called" << std::endl;
+    std::cout << "Animal Deconstructor called" << std::endl;
 }
 
-// Overloaded Operators
-Animal &Animal::operator=(const Animal &src)
+Animal &Animal::operator=(const Animal &ani)
 {
-	std::cout << "Animal Assignation operator called" << std::endl;
-	if (this == &src)
-		return *this;
-
-	this->_type = src._type;
-	return *this;
+    std::cout << "Animal Assignation operator called" << std::endl;
+    if (this == &ani)
+        return *this;
+    this->_type = ani._type;
+    return *this;
 }
 
-// Public Methods
 void Animal::makeSound(void)const
 {
-	std::cout << "This animal doesn't make any sound." << std::endl;
+    std::cout << "This animal remains silent." << std::endl;
 }
 
-// Getter
-std::string	Animal::getType(void)const
+std::string Animal::getType(void)const
 {
-	return (this->_type);
+    return (this->_type);
 }

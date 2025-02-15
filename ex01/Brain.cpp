@@ -1,64 +1,57 @@
 #include "Brain.hpp"
 
-// Constructors
 Brain::Brain()
 {
-	std::cout << "Brain Default Constructor called" << std::endl;
+    std::cout << "Brain's default constructor executed." << std::endl;
 }
 
-Brain::Brain(const Brain &copy)
+Brain::Brain(const Brain &copyBrain)
 {
-	std::cout << "Brain Copy Constructor called" << std::endl;
-	*this = copy;
+    std::cout << "Brain copied through constructor." << std::endl;
+    *this = copyBrain;
 }
 
-// Deconstructors
 Brain::~Brain()
 {
-	std::cout << "Brain Deconstructor called" << std::endl;
+    std::cout << "Brain destructor executed." << std::endl;
 }
 
-// Overloaded Operators
-Brain &Brain::operator=(const Brain &src)
+Brain &Brain::operator=(const Brain &brain)
 {
-	std::cout << "Brain Assignation operator called" << std::endl;
-	if (this == &src)
-		return *this;
-	for (int i = 0; i < 100; i++)
-	{
-		if (src._ideas[i].length() > 0)
-			this->_ideas[i].assign(src._ideas[i]);
-	}
-	return *this;
+    std::cout << "Brain assignment operator executed." << std::endl;
+    if (this == &brain)
+        return *this;
+    for (int i = 0; i < 100; i++)
+    {
+        if (brain._ideas[i].length() > 0)
+            this->_ideas[i].assign(brain._ideas[i]);
+    }
+    return *this;
 }
 
-// Public Methods
-
-// Getter
-const std::string	Brain::getIdea(size_t i)const
+const std::string Brain::getIdea(size_t i) const
 {
-	if (i < 100)
-		return(this->_ideas[i]);
-	else
-		return ("\033[33mThere is only 100 ideas per brain.\033[0m");
+    if (i < 100)
+        return this->_ideas[i];
+    else
+        return "Index exceeds limit: Only 100 ideas allowed.";
 }
 
-const std::string *Brain::getIdeaAddress(size_t i)const
+const std::string *Brain::getIdeaAddress(size_t i) const
 {
-	if (i < 100)
-	{
-		const std::string	&stringREF = this->_ideas[i];
-		return(&stringREF);
-	}
-	else
-		return (NULL);
+    if (i < 100)
+    {
+        const std::string &stringREF = this->_ideas[i];
+        return &stringREF;
+    }
+    else
+        return NULL;
 }
 
-// Setter
-void	Brain::setIdea(size_t i, std::string idea)
+void Brain::setIdea(size_t i, std::string idea)
 {
-	if (i < 100)
-		this->_ideas[i] = idea;
-	else
-		std::cout << "\033[33mThere is only 100 ideas per brain.\033[0m" << std::endl;
+    if (i < 100)
+        this->_ideas[i] = idea;
+    else
+        std::cout << "Index out of range: Only 100 ideas allowed." << std::endl;
 }

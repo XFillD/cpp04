@@ -1,37 +1,33 @@
 #include "Dog.hpp"
 
-// Constructors
 Dog::Dog(): Animal()
 {
-	this->_type = "Dog";
-	std::cout << "Dog Default Constructor called" << std::endl;
+    this->_type = "Dog";
+    std::cout << "Default Dog instance created" << std::endl;
 }
 
-Dog::Dog(const Dog &copy): Animal()
+Dog::Dog(const Dog &copyDog): Animal()
 {
-	std::cout << "Dog Copy Constructor called" << std::endl;
-	*this = copy;
+    std::cout << "Dog instance copied" << std::endl;
+    *this = copyDog;
 }
 
-// Deconstructors
 Dog::~Dog()
 {
-	std::cout << "Dog Deconstructor called" << std::endl;
+    std::cout << "Dog instance destroyed" << std::endl;
 }
 
-// Overloaded Operators
-Dog &Dog::operator=(const Dog &src)
+Dog &Dog::operator=(const Dog &dog)
 {
-	std::cout << "Dog Assignation operator called" << std::endl;
-	if (this == &src)
-		return *this;
+    std::cout << "Dog assignment operator invoked" << std::endl;
+    if (this == &dog)
+        return *this;
 
-	this->_type = src._type;
-	return *this;
+    this->_type = dog._type;
+    return *this;
 }
 
-// Public Methods
 void	Dog::makeSound(void)const
 {
-	std::cout << this->getType() << " says: **Woof**" << std::endl;
+    std::cout << this->getType() << "Woof" << std::endl;
 }

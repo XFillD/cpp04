@@ -1,10 +1,7 @@
-// Includes
 #include <string>
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
-
-// classes
 
 class Animal
 {
@@ -12,20 +9,14 @@ class Animal
 		std::string _type;
 
 	public:
-	// Constructors
 		Animal();
-		Animal(const Animal &copy);
+		Animal(const Animal &copyAnimal);
 
-	// Deconstructors
 		virtual ~Animal();
 
-	// Overloaded Operators
-		Animal &operator=(const Animal &src);
+		Animal &operator=(const Animal &ani);
 
-	// Public Methods
 		virtual void makeSound(void)const;
-	// Getter
-		std::string getType(void)const;
-	// Setter
 
+		std::string getType(void)const;
 };

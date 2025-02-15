@@ -11,13 +11,13 @@ class Cat: public Animal
 	public:
 	// Constructors
 		Cat();
-		Cat(const Cat &copy);
+		Cat(const Cat &copyCat);
 
 	// Deconstructors
 		~Cat();
 
 	// Overloaded Operators
-		Cat &operator=(const Cat &src);
+		Cat &operator=(const Cat &cat);
 
 	// Public Methods
 		void makeSound(void)const;

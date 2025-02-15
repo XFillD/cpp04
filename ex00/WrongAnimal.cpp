@@ -1,42 +1,37 @@
 #include "WrongAnimal.hpp"
 
-// Constructors
-WrongAnimal::WrongAnimal():_type("wrong_default")
+WrongAnimal::WrongAnimal() : _type("wrong_default")
 {
-	std::cout << "WrongAnimal Default Constructor called" << std::endl;
+    std::cout << "Default WrongAnimal instance initialized." << std::endl;
 }
 
-WrongAnimal::WrongAnimal(const WrongAnimal &copy)
+WrongAnimal::WrongAnimal(const WrongAnimal &copyWronga)
 {
-	std::cout << "WrongAnimal Copy Constructor called" << std::endl;
-	*this = copy;
+    std::cout << "WrongAnimal instance duplicated via copy constructor." << std::endl;
+    *this = copyWronga;
 }
 
-// Deconstructors
 WrongAnimal::~WrongAnimal()
 {
-	std::cout << "WrongAnimal Deconstructor called" << std::endl;
+    std::cout << "WrongAnimal instance terminated." << std::endl;
 }
 
-// Overloaded Operators
-WrongAnimal &WrongAnimal::operator=(const WrongAnimal &src)
+WrongAnimal &WrongAnimal::operator=(const WrongAnimal &wronga)
 {
-	std::cout << "WrongAnimal Assignation operator called" << std::endl;
-	if (this == &src)
-		return *this;
+    std::cout << "WrongAnimal assignment operator executed." << std::endl;
+    if (this == &wronga)
+        return *this;
 
-	this->_type = src._type;
-	return *this;
+    this->_type = wronga._type;
+    return *this;
 }
 
-// Public Methods
 void WrongAnimal::makeSound(void)const
 {
-	std::cout << this->getType() << " says: **WrongAnimal sounds**" << std::endl;
+    std::cout << this->getType() << "WrongAnimal noise" << std::endl;
 }
 
-// Getter
 std::string	WrongAnimal::getType(void)const
 {
-	return (this->_type);
+    return (this->_type);
 }

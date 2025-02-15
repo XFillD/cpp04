@@ -1,37 +1,32 @@
 #include "WrongCat.hpp"
 
-// Constructors
 WrongCat::WrongCat(): WrongAnimal()
 {
-	this->_type = "WrongCat";
-	std::cout << "WrongCat Default Constructor called" << std::endl;
+    this->_type = "WrongCat";
+    std::cout << "WrongCat object created using default constructor." << std::endl;
 }
 
-WrongCat::WrongCat(const WrongCat &copy): WrongAnimal()
+WrongCat::WrongCat(const WrongCat &copyWrCat): WrongAnimal()
 {
-	std::cout << "WrongCat Copy Constructor called" << std::endl;
-	*this = copy;
+    std::cout << "WrongCat object created via copy constructor." << std::endl;
+    *this = copyWrCat;
 }
 
-// Deconstructors
 WrongCat::~WrongCat()
 {
-	std::cout << "WrongCat Deconstructor called" << std::endl;
+    std::cout << "WrongCat object destroyed." << std::endl;
 }
 
-// Overloaded Operators
-WrongCat &WrongCat::operator=(const WrongCat &src)
+WrongCat &WrongCat::operator=(const WrongCat &wrcat)
 {
-	std::cout << "WrongCat Assignation operator called" << std::endl;
-	if (this == &src)
-		return *this;
-
-	this->_type = src._type;
-	return *this;
+    std::cout << "WrongCat object assigned using copy operator." << std::endl;
+    if (this == &wrcat)
+        return *this;
+    this->_type = wrcat._type;
+    return *this;
 }
 
-// Public Methods
 void WrongCat::makeSound(void)const
 {
-	std::cout << this->getType() << " says: **WrongCat sounds**" << std::endl;
+    std::cout << this->getType() << "WrongCat meow" << std::endl;
 }

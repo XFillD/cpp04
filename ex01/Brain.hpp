@@ -1,8 +1,5 @@
-// Includes
 #include <string>
 #include <iostream>
-
-// classes
 
 class Brain
 {
@@ -10,21 +7,15 @@ class Brain
 		std::string _ideas[100];
 
 	public:
-	// Constructors
 		Brain();
-		Brain(const Brain &copy);
+		Brain(const Brain &copyBrain);
 
-	// Deconstructors
 		virtual ~Brain();
 
-	// Overloaded Operators
-		Brain &operator=(const Brain &src);
+		Brain &operator=(const Brain &brain);
 
-	// Public Methods
-
-	// Getter
 		const std::string getIdea(size_t i)const;
 		const std::string *getIdeaAddress(size_t i)const;
-	// Setter
+
 		void setIdea(size_t i, std::string idea);
 };

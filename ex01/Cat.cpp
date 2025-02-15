@@ -1,66 +1,59 @@
 #include "Cat.hpp"
 
-// Constructors
 Cat::Cat(): Animal()
 {
-	std::cout << "Cat Default Constructor called" << std::endl;
-	this->_type = "Cat";
-	this->_brain = new Brain();
-	if (this->_brain == NULL)
-	{
-		perror("Cat Brain allocation failed");
-		std::cerr << "Exiting the process now." << std::endl;
-		exit(1);
-	}
+    std::cout << "Cat object created using default constructor." << std::endl;
+    this->_type = "Cat";
+    this->_brain = new Brain();
+    if (this->_brain == NULL)
+    {
+        perror("Cat Brain allocation error.");
+        std::cerr << "Terminating process." << std::endl;
+        exit(1);
+    }
 }
 
-Cat::Cat(const Cat &copy): Animal()
+Cat::Cat(const Cat &copyCat): Animal()
 {
-	std::cout << "Cat Copy Constructor called" << std::endl;
-	*this = copy;
+    std::cout << "Cat object created via copy constructor." << std::endl;
+    *this = copyCat;
 }
 
-// Deconstructors
 Cat::~Cat()
 {
-	delete(this->_brain);
-	std::cout << "Cat Deconstructor called" << std::endl;
+    delete(this->_brain);
+    std::cout << "Cat object destroyed." << std::endl;
 }
 
-// Overloaded Operators
-Cat &Cat::operator=(const Cat &src)
+Cat &Cat::operator=(const Cat &cat)
 {
-	std::cout << "Cat Assignation operator called" << std::endl;
-	if (this == &src)
-		return *this;
-
-	this->_type = src._type;
-	this->_brain = new Brain();
-	if (this->_brain == NULL)
-	{
-		perror("Cat Brain allocation failed");
-		std::cerr << "Exiting the process now." << std::endl;
-		exit(1);
-	}
-	*this->_brain = *src._brain;
-	return *this;
+    std::cout << "Cat object copy-assigned." << std::endl;
+    if (this == &cat)
+        return *this;
+    this->_type = cat._type;
+    this->_brain = new Brain();
+    if (this->_brain == NULL)
+    {
+        perror("Cat Brain allocation error.");
+        std::cerr << "Terminating process." << std::endl;
+        exit(1);
+    }
+    *this->_brain = *cat._brain;
+    return *this;
 }
 
-// Public Methods
-void	Cat::makeSound(void)const
+void Cat::makeSound(void)const
 {
-	std::cout << this->getType() << " says: **Meeeoow**" << std::endl;
+    std::cout << this->getType() << "Meeow" << std::endl;
 }
 
-// Getter
-void	Cat::getIdeas(void)const
+void Cat::getIdeas(void)const
 {
-	for (int i = 0; i < 3; i++)// change the 3 to 100 to show all ideas
-		std::cout << "\tIdea " << i << " of the Cat is: \"" << this->_brain->getIdea(i) << "\" at the address " << this->_brain->getIdeaAddress(i) << std::endl;
+    for (int i = 0; i < 3; i++)
+        std::cout << "\tIdea " << i << " of the Cat: \"" << this->_brain->getIdea(i) << "\" located at " << this->_brain->getIdeaAddress(i) << std::endl;
 }
 
-// Setter
-void	Cat::setIdea(size_t i, std::string idea)
+void Cat::setIdea(size_t i, std::string idea)
 {
-		this->_brain->setIdea(i, idea);
+    this->_brain->setIdea(i, idea);
 }

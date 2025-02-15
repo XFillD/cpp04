@@ -1,37 +1,33 @@
 #include "Cat.hpp"
 
-// Constructors
 Cat::Cat(): Animal()
 {
-	this->_type = "Cat";
-	std::cout << "Cat Default Constructor called" << std::endl;
+    this->_type = "Cat";
+    std::cout << "Cat instance initialized with default configuration" << std::endl;
 }
 
-Cat::Cat(const Cat &copy): Animal()
+Cat::Cat(const Cat &copyCat): Animal()
 {
-	std::cout << "Cat Copy Constructor called" << std::endl;
-	*this = copy;
+    std::cout << "Cat instance duplicated via copy constructor" << std::endl;
+    *this = copyCat;
 }
 
-// Deconstructors
 Cat::~Cat()
 {
-	std::cout << "Cat Deconstructor called" << std::endl;
+    std::cout << "Cat instance terminated" << std::endl;
 }
 
-// Overloaded Operators
-Cat &Cat::operator=(const Cat &src)
+Cat &Cat::operator=(const Cat &cat)
 {
-	std::cout << "Cat Assignation operator called" << std::endl;
-	if (this == &src)
-		return *this;
+    std::cout << "Cat assignment operator executed" << std::endl;
+    if (this == &cat)
+        return *this;
 
-	this->_type = src._type;
-	return *this;
+    this->_type = cat._type;
+    return *this;
 }
 
-// Public Methods
-void	Cat::makeSound(void)const
+void	Cat::makeSound(void) const
 {
-	std::cout << this->getType() << " says: **Meeeoow**" << std::endl;
+    std::cout << this->getType() << "Meeow" << std::endl;
 }
