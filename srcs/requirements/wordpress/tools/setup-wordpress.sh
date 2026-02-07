@@ -17,7 +17,7 @@ cd /var/www/html
 
 # Wait for MariaDB to be ready
 echo "Waiting for MariaDB..."
-while ! mysqladmin ping -h"${MYSQL_HOST}" --silent 2>/dev/null; do
+while ! mariadb-admin ping -h"${MYSQL_HOST}" --silent 2>/dev/null; do
     sleep 2
 done
 echo "MariaDB is ready!"
