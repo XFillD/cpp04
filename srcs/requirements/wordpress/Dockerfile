@@ -5,6 +5,7 @@ FROM debian:bullseye
 
 # Install PHP-FPM and required extensions for WordPress
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
     php7.4-fpm \
     php7.4-mysql \
     php7.4-curl \
