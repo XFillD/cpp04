@@ -62,4 +62,4 @@ fi
 
 echo "Starting PHP-FPM..."
 # Run PHP-FPM in foreground (PID 1)
-exec php-fpm7.4 -F
+exec php-fpm8.2 -F

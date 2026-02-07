@@ -1,7 +1,7 @@
 # ============================================
 # NGINX Container - TLSv1.2/1.3 Only
 # ============================================
-FROM debian:bullseye
+FROM debian:bookworm
 
 # Install nginx and openssl for TLS
 RUN apt-get update && apt-get install -y --no-install-recommends \

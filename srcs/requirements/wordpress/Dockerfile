@@ -1,20 +1,19 @@
 # ============================================
 # WordPress + PHP-FPM Container (NO NGINX)
 # ============================================
-FROM debian:bullseye
+FROM debian:bookworm
 
 # Install PHP-FPM and required extensions for WordPress
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
-    php7.4-fpm \
-    php7.4-mysql \
-    php7.4-curl \
-    php7.4-gd \
-    php7.4-intl \
-    php7.4-mbstring \
-    php7.4-xml \
-    php7.4-zip \
-    php7.4-json \
+    php8.2-fpm \
+    php8.2-mysql \
+    php8.2-curl \
+    php8.2-gd \
+    php8.2-intl \
+    php8.2-mbstring \
+    php8.2-xml \
+    php8.2-zip \
     curl \
     mariadb-client \
     && rm -rf /var/lib/apt/lists/*
@@ -25,9 +24,9 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
     mv wp-cli.phar /usr/local/bin/wp
 
 # Configure PHP-FPM to listen on port 9000
-RUN sed -i 's|listen = /run/php/php7.4-fpm.sock|listen = 9000|g' /etc/php/7.4/fpm/pool.d/www.conf && \
-    sed -i 's|;listen.owner = www-data|listen.owner = www-data|g' /etc/php/7.4/fpm/pool.d/www.conf && \
-    sed -i 's|;listen.group = www-data|listen.group = www-data|g' /etc/php/7.4/fpm/pool.d/www.conf
+RUN sed -i 's|listen = /run/php/php8.2-fpm.sock|listen = 9000|g' /etc/php/8.2/fpm/pool.d/www.conf && \
+    sed -i 's|;listen.owner = www-data|listen.owner = www-data|g' /etc/php/8.2/fpm/pool.d/www.conf && \
+    sed -i 's|;listen.group = www-data|listen.group = www-data|g' /etc/php/8.2/fpm/pool.d/www.conf
 
 # Create directory for PHP-FPM pid file
 RUN mkdir -p /run/php && chown www-data:www-data /run/php
@@ -40,7 +39,7 @@ COPY tools/setup-wordpress.sh /usr/local/bin/setup-wordpress.sh
 RUN chmod +x /usr/local/bin/setup-wordpress.sh
 
 # Copy PHP-FPM configuration
-COPY conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY conf/www.conf /etc/php/8.2/fpm/pool.d/www.conf
 
 WORKDIR /var/www/html
 

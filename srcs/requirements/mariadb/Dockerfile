@@ -1,7 +1,7 @@
 # ============================================
 # MariaDB Container - Database Only
 # ============================================
-FROM debian:bullseye
+FROM debian:bookworm
 
 # Install MariaDB server
 RUN apt-get update && apt-get install -y --no-install-recommends \
