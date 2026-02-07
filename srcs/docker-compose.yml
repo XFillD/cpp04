@@ -1,4 +1,4 @@
-cdservices:
+services:
   # ============================================
   # NGINX - TLS Reverse Proxy (Entry Point)
   # ============================================
