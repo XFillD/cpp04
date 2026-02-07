@@ -9,31 +9,33 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
     echo "Initializing MariaDB data directory..."
     mariadb-install-db --user=mysql --datadir=/var/lib/mysql
 
-    # Start MariaDB temporarily (fresh install allows root without password)
-    mysqld --user=mysql &
-    pid=$!
-
-    echo "Waiting for MariaDB to start..."
-    sleep 5
-    while ! mariadb -u root -e "SELECT 1" 2>/dev/null; do
-        sleep 2
-    done
-
-    echo "Creating database and users..."
-
-    mariadb -u root <<EOF
+    # Write init SQL to temp file
+    cat > /tmp/init.sql <<EOF
+FLUSH PRIVILEGES;
 DELETE FROM mysql.user WHERE User='';
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
 ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWORD}';
 CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;
-CREATE USER '${MYSQL_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
+CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${DB_PASSWORD}';
 GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO '${MYSQL_USER}'@'%';
 FLUSH PRIVILEGES;
 EOF
 
+    echo "Running first-time database setup..."
+    # Start MariaDB with init-file (executes SQL on startup)
+    mysqld --user=mysql --init-file=/tmp/init.sql &
+    pid=$!
+
+    # Wait until ready
+    sleep 5
+    while ! mariadb-admin ping -u root -p"${DB_ROOT_PASSWORD}" --silent 2>/dev/null; do
+        sleep 2
+    done
+
     echo "Database initialization complete!"
 
-    # Stop temporary MariaDB
+    # Clean up and stop
+    rm -f /tmp/init.sql
     kill $pid
     wait $pid 2>/dev/null
 fi
