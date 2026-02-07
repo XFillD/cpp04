@@ -25,7 +25,7 @@ echo "MariaDB is ready!"
 # Check if WordPress is already installed
 if [ ! -f "/var/www/html/wp-config.php" ]; then
     echo "Downloading WordPress..."
-    wp core download --allow-root
+    wp core download --allow-root --force
 
     echo "Creating wp-config.php..."
     wp config create \
