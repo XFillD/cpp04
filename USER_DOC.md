@@ -1,46 +1,46 @@
-# User Documentation
+# User Guide
 
-## 1. Service Overview
-This stack provides a fully functional **WordPress** blogging platform.
-* **Website:** Accessible via HTTPS.
-* **Database:** A MariaDB instance stores all site content safely.
-* **Security:** An NGINX server handles SSL/TLS encryption.
+## 1. What This Is
+A self-hosted **WordPress** website running inside Docker containers.
+* **Web access** is served over HTTPS.
+* **All content** is stored in a MariaDB database.
+* **TLS encryption** is handled by an NGINX reverse proxy.
 
-## 2. Managing the Project
-As a user, you can control the project using the provided `Makefile` at the root of the directory:
+## 2. Controlling the Stack
+Use the `Makefile` in the project root to manage everything:
 
-* **Start the Website:**
+* **Bring the site up:**
     ```bash
     make
     ```
-    *This will download necessary components, build the containers, and launch the site.*
+    *Builds every container from scratch (if needed) and starts the services.*
 
-* **Stop the Website:**
+* **Shut it down:**
     ```bash
     make down
     ```
-    *This stops the running services.*
+    *Stops all running containers gracefully.*
 
-* **Clean Reset (Wipe Data):**
+* **Full wipe (destructive):**
     ```bash
     make fclean
     ```
-    *WARNING: This deletes the database and all website data.*
+    *Removes containers, images, **and all stored data** — use with caution.*
 
-## 3. Accessing the Website
-Once the command `make` has finished running:
-1.  Open your web browser (Firefox/Chrome).
-2.  Navigate to: **[https://fhauba.42.fr](https://fhauba.42.fr)**
-3.  **Note:** You will see a "Security Warning" because we are using a self-signed certificate. You must accept the risk/advanced options to proceed.
+## 3. Opening the Website
+After `make` finishes:
+1.  Launch any modern browser (Firefox, Chrome, etc.).
+2.  Go to **[https://fhauba.42.fr](https://fhauba.42.fr)**
+3.  The browser will warn about an untrusted certificate (it is self-signed). Accept the exception to continue.
 
-## 4. Credentials
-To log in to the WordPress Dashboard (`/wp-admin`) or manage the Database, refer to the **`.env`** file located in the `srcs/` directory.
+## 4. Login Details
+WordPress admin panel lives at `/wp-admin`. All credentials are defined in `srcs/.env`:
 
-* **WordPress Admin User:** See `WP_ADMIN_USER`
-* **WordPress Password:** See `WP_ADMIN_PASSWORD`
-* **Database User:** See `MYSQL_USER`
+* **Admin username:** value of `WP_ADMIN_USER`
+* **Admin password:** value of `WP_ADMIN_PASSWORD`
+* **DB user:** value of `MYSQL_USER`
 
-## 5. Status Check
-To verify if the website is running correctly, type:
+## 5. Health Check
+Run this to confirm all three containers are up:
 ```bash
 docker ps

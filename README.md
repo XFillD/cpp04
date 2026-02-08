@@ -1,51 +1,48 @@
-*This project has been created as part of the 42 curriculum by fhauba.*
+*42 school project by fhauba — system administration with Docker.*
 
 # Inception
 
-## Description
-Inception is a System Administration project that involves setting up a small infrastructure using **Docker Compose**. The goal is to build a web server stack from scratch using containers, understanding the specific rules of microservices, data persistence, and networking.
+## Overview
+Inception is a hands-on infrastructure project where a complete web-hosting stack is assembled from individual Docker containers. It covers container orchestration, network isolation, persistent storage, and secure communication.
 
-The infrastructure consists of three separate services:
-* **NGINX:** The secure entry point (HTTPS/TLS) for the website.
-* **WordPress + PHP-FPM:** The dynamic content processor (backend).
-* **MariaDB:** The database storage.
+Three independent services make up the stack:
+* **NGINX** — reverse proxy that terminates TLS and serves as the single public-facing endpoint.
+* **WordPress + PHP-FPM** — application layer responsible for rendering dynamic pages.
+* **MariaDB** — relational database that holds all site content.
 
-Each service runs in its own dedicated container, isolated from the others, communicating only through a private Docker network.
+Every service lives in its own container; inter-service traffic flows exclusively over an internal Docker bridge network.
 
-## Instructions
-1.  **Clone the repository:**
-2.  **Setup Environment:**
-    Ensure a `.env` file is present in `srcs/` containing the required database credentials.
-3.  **Launch:**
-    Use the Makefile to build and start the infrastructure.
+## Quick Start
+1.  **Clone the repo.**
+2.  **Prepare the environment:**
+    Make sure `srcs/.env` exists and contains valid database and WordPress credentials.
+3.  **Build & run:**
     ```bash
     make
     ```
-4.  **Access:**
-    Open `https://fhauba.42.fr` in your browser.
+4.  **Open the site:**
+    Visit `https://fhauba.42.fr` in a browser.
 
-## Project Description & Architecture Choices
+## Architecture & Design Decisions
 
-### Virtual Machines vs Docker
-* **Virtual Machines (VMs):** Emulate an entire physical computer, including the hardware and a full Operating System (OS). They are heavy, slow to boot, and use a lot of RAM.
-* **Docker (Containers):** Virtualizes only the OS level. Containers share the Host's kernel but have their own isolated user space. They are extremely lightweight, start instantly, and are more efficient than VMs for running specific applications.
+### Containers over Virtual Machines
+* **VMs** spin up an entire operating system with its own kernel, which makes them resource-heavy and slow to start.
+* **Containers** share the host kernel while keeping user-space isolated. They boot in milliseconds, consume far less memory, and are ideal for packaging single-purpose services like a web server or a database.
 
-### Secrets vs Environment Variables
-* **Environment Variables:** Stored in `.env` files and passed to the container at runtime. They are easy to use but can be insecure if the file is committed to Git or if someone runs `docker inspect`.
-* **Secrets:** A more secure way to manage sensitive data (passwords, keys). In Docker Swarm, secrets are encrypted during transit and at rest. For this project, we used **Environment Variables** (as per the subject's strict requirement for a `.env` file), but we ensured the file is not publicly tracked.
+### Environment Variables for Configuration
+* **Env vars** (loaded from a `.env` file at runtime) are the simplest way to inject credentials into containers. The trade-off is that they are visible via `docker inspect`.
+* **Docker Secrets** offer encrypted storage but require Swarm mode. Because the project subject mandates a `.env` file, we stick with env vars while keeping the file out of version control.
 
-### Docker Network vs Host Network
-* **Host Network:** The container shares the exact same IP and port space as the host machine. This offers no isolation; if two containers want port 80, they conflict.
-* **Docker Network (Bridge):** Creates a private internal network. Containers get their own internal IP addresses and can talk to each other using their service names (DNS resolution). This is more secure because we can hide the Database from the outside world and only expose NGINX.
+### Bridge Network for Isolation
+* **Host networking** shares the machine's IP stack with every container — no isolation, easy port conflicts.
+* A **bridge network** gives each container its own internal address and enables DNS-based service discovery (e.g., `wordpress` can reach `mariadb` by name). Only NGINX exposes port 443 to the outside; the database stays hidden.
 
-### Docker Volumes vs Bind Mounts
-* **Bind Mounts:** Directly link a folder on your Host (e.g., `/home/user/desktop`) to a folder in the container. They depend on the specific file structure of the host machine.
-* **Docker Volumes:** Managed entirely by Docker. They are stored in a specific part of the host filesystem (usually `/var/lib/docker/volumes/`). They are safer, easier to back up, and work the same on any OS. In this project, we used **Named Volumes** with a custom driver device option to store data in `/home/fhauba/data` as required.
+### Named Volumes for Persistent Storage
+* **Bind mounts** tie a container to a specific host path, making it less portable.
+* **Docker volumes** are managed by the engine, simple to back up, and OS-agnostic. We use named volumes with a custom `device` option so data lands in `/home/fhauba/data` as the subject requires.
 
-## Resources
-* [Docker Documentation](https://docs.docker.com/)
-* [NGINX Documentation](https://nginx.org/en/docs/)
-* [WordPress CLI Commands](https://developer.wordpress.org/cli/commands/)
-* **AI Usage:** Generative AI (Google Gemini) was used during this project to:
-    * Debug configuration errors (specifically MySQL connection loops and NGINX routing).
-    * Draft the initial structure of this documentation.
+## References
+* [Docker Docs](https://docs.docker.com/)
+* [NGINX Docs](https://nginx.org/en/docs/)
+* [WP-CLI Handbook](https://developer.wordpress.org/cli/commands/)
+* **AI disclosure:** Google Gemini was consulted during development to help troubleshoot database connectivity issues and to outline the initial version of this documentation.

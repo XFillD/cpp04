@@ -1,21 +1,20 @@
-# Developer Documentation
+# Developer Guide
 
-## 1. Prerequisites
-To develop or maintain this project, the host machine must have:
-* **Docker Engine** (installed and running).
-* **Docker Compose** (Plugin V2 recommended).
-* **Make**.
-* **Sudo privileges** (to manage `/etc/hosts` and data folders).
+## 1. Requirements
+Before working on this project make sure the host has:
+* **Docker Engine** — up and running.
+* **Docker Compose V2** (the `docker compose` plugin).
+* **GNU Make**.
+* **Root / sudo access** — needed for `/etc/hosts` edits and data-directory permissions.
 
-## 2. Setup & Installation
-1.  **Domain Mapping:**
-    Add the following line to your `/etc/hosts` file to redirect the domain to your local machine:
+## 2. Initial Setup
+1.  **Local DNS:**
+    Point the project domain to localhost by appending this line to `/etc/hosts`:
     ```text
     127.0.0.1  fhauba.42.fr
     ```
-2.  **Environment Variables:**
-    A `.env` file must be present in `srcs/.env`. It configures sensitive data for the build process.
-    *Template:*
+2.  **Credentials file:**
+    Create (or verify) `srcs/.env` with at least the following keys:
     ```ini
     DOMAIN_NAME=fhauba.42.fr
     MYSQL_DATABASE=wordpress
@@ -23,35 +22,35 @@ To develop or maintain this project, the host machine must have:
     MYSQL_PASSWORD=...
     ```
 
-## 3. Build Architecture
-The project is orchestrated via `srcs/docker-compose.yml`.
-* **Images:** We build custom images from `debian:bullseye`.
-* **Dependencies:** `wordpress` depends on `mariadb`; `nginx` depends on `wordpress`.
+## 3. How the Build Works
+Everything is driven by `srcs/docker-compose.yml`.
+* **Base image:** All containers derive from `debian:bullseye`.
+* **Startup order:** `mariadb` → `wordpress` → `nginx` (enforced via `depends_on`).
 
-### Directory Structure
-* `srcs/requirements/mariadb`: Dockerfile & scripts for the Database.
-* `srcs/requirements/wordpress`: Dockerfile & PHP-FPM config.
-* `srcs/requirements/nginx`: Dockerfile & SSL generation.
+### Source Layout
+* `srcs/requirements/mariadb` — database image, init script, server config.
+* `srcs/requirements/wordpress` — PHP-FPM image, WP-CLI installer, pool config.
+* `srcs/requirements/nginx` — web-server image, TLS generator, virtual-host config.
 
-## 4. Data Persistence
-Data is not stored inside the containers. It uses **Docker Volumes** mapped to the host machine to ensure persistence across restarts.
+## 4. Where Data Lives
+Nothing persistent is kept inside a container. Named Docker volumes bind to host directories so data survives rebuilds.
 
-* **Host Location:** `/home/fhauba/data/`
-    * **Database Files:** `/home/fhauba/data/mariadb`
-    * **Website Files:** `/home/fhauba/data/wordpress`
+* **Root path:** `/home/fhauba/data/`
+    * **MariaDB tables:** `/home/fhauba/data/mariadb`
+    * **WordPress files:** `/home/fhauba/data/wordpress`
 
-## 5. Common Commands
-* **Build and start in background:**
+## 5. Useful Commands
+* **Rebuild and launch (detached):**
     ```bash
     docker compose -f srcs/docker-compose.yml up -d --build
     ```
-* **View Logs (Debugging):**
+* **Inspect container output:**
     ```bash
     docker logs wordpress
     docker logs nginx
     docker logs mariadb
     ```
-* **Enter a container shell:**
+* **Drop into a running container:**
     ```bash
     docker exec -it wordpress bash
     ```
