@@ -1,151 +1,46 @@
-# User Documentation - Inception
+# User Documentation
 
-This document explains how to use and manage the Inception infrastructure.
+## 1. Service Overview
+This stack provides a fully functional **WordPress** blogging platform.
+* **Website:** Accessible via HTTPS.
+* **Database:** A MariaDB instance stores all site content safely.
+* **Security:** An NGINX server handles SSL/TLS encryption.
 
-## Overview
+## 2. Managing the Project
+As a user, you can control the project using the provided `Makefile` at the root of the directory:
 
-Inception provides a complete WordPress website running on:
-- **NGINX** - Secure web server (HTTPS only)
-- **WordPress** - Content Management System
-- **MariaDB** - Database
+* **Start the Website:**
+    ```bash
+    make
+    ```
+    *This will download necessary components, build the containers, and launch the site.*
 
-## Services Provided
+* **Stop the Website:**
+    ```bash
+    make down
+    ```
+    *This stops the running services.*
 
-| Service | Description | Access |
-|---------|-------------|--------|
-| WordPress Website | Main website | https://fhauba.42.fr |
-| WordPress Admin | Administration panel | https://fhauba.42.fr/wp-admin |
-| Database | MariaDB (internal only) | Not directly accessible |
+* **Clean Reset (Wipe Data):**
+    ```bash
+    make fclean
+    ```
+    *WARNING: This deletes the database and all website data.*
 
-## Starting the Project
+## 3. Accessing the Website
+Once the command `make` has finished running:
+1.  Open your web browser (Firefox/Chrome).
+2.  Navigate to: **[https://jstudnic.42.fr](https://jstudnic.42.fr)**
+3.  **Note:** You will see a "Security Warning" because we are using a self-signed certificate. You must accept the risk/advanced options to proceed.
 
+## 4. Credentials
+To log in to the WordPress Dashboard (`/wp-admin`) or manage the Database, refer to the **`.env`** file located in the `srcs/` directory.
+
+* **WordPress Admin User:** See `WP_ADMIN_USER`
+* **WordPress Password:** See `WP_ADMIN_PASSWORD`
+* **Database User:** See `MYSQL_USER`
+
+## 5. Status Check
+To verify if the website is running correctly, type:
 ```bash
-# Start all services
-make up
-
-# Or build and start
-make all
-```
-
-## Stopping the Project
-
-```bash
-# Stop containers (preserves data)
-make down
-
-# Stop without removing containers
-make stop
-
-# Restart all services
-make restart
-```
-
-## Accessing the Website
-
-1. **Main Website**: Open https://fhauba.42.fr in your browser
-2. **Admin Panel**: Open https://fhauba.42.fr/wp-admin
-
-### SSL Certificate Warning
-The project uses a self-signed certificate. Your browser will show a security warning - this is normal. Click "Advanced" and proceed to the website.
-
-## Credentials
-
-### Location
-Credentials are stored in the `secrets/` directory:
-
-| File | Contents |
-|------|----------|
-| `secrets/credentials.txt` | WordPress admin and user credentials |
-| `secrets/db_password.txt` | Database user password |
-| `secrets/db_root_password.txt` | Database root password |
-
-### Default WordPress Users
-
-| User | Role | Purpose |
-|------|------|---------|
-| supervisor | Administrator | Full site management |
-| fhauba | Author | Content creation |
-
-**Important**: Change these passwords before deploying to production!
-
-## Managing Credentials
-
-### Changing WordPress Password
-1. Login to https://fhauba.42.fr/wp-admin
-2. Go to Users → Your Profile
-3. Scroll to "Account Management"
-4. Click "Set New Password"
-
-### Changing Database Password
-1. Update `secrets/db_password.txt`
-2. Update `secrets/credentials.txt` if needed
-3. Rebuild containers: `make re`
-
-## Health Checks
-
-### Check All Services
-```bash
-make status
-```
-
-### Check Individual Services
-```bash
-# View running containers
 docker ps
-
-# Check NGINX
-docker logs nginx
-
-# Check WordPress
-docker logs wordpress
-
-# Check MariaDB
-docker logs mariadb
-```
-
-### Verify HTTPS
-```bash
-curl -k https://fhauba.42.fr
-```
-
-### Test Database Connection
-```bash
-docker exec -it mariadb mysql -u wpuser -p wordpress
-```
-
-## Troubleshooting
-
-### Website Not Loading
-1. Check if containers are running: `make status`
-2. Check NGINX logs: `docker logs nginx`
-3. Verify domain resolution: `ping fhauba.42.fr`
-
-### Database Connection Failed
-1. Check MariaDB is running: `docker logs mariadb`
-2. Verify credentials match in `.env` and secrets
-3. Restart services: `make restart`
-
-### Permission Issues
-```bash
-# Fix volume permissions
-sudo chown -R 1000:1000 /home/fhauba/data
-```
-
-## Data Locations
-
-| Data | Host Path | Container Path |
-|------|-----------|----------------|
-| WordPress files | `/home/fhauba/data/wordpress` | `/var/www/html` |
-| Database | `/home/fhauba/data/mariadb` | `/var/lib/mysql` |
-
-## Backup
-
-### Backup WordPress Files
-```bash
-sudo tar -czvf wordpress-backup.tar.gz /home/fhauba/data/wordpress
-```
-
-### Backup Database
-```bash
-docker exec mariadb mysqldump -u root -p wordpress > backup.sql
-```

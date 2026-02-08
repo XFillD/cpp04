@@ -1,77 +1,28 @@
-# **************************************************************************** #
-#                                                                              #
-#    Inception - Docker Infrastructure                                         #
-#                                                                              #
-# **************************************************************************** #
+name = inception
 
-NAME		= inception
-COMPOSE_FILE	= srcs/docker-compose.yml
-DATA_DIR	= /home/$(USER)/data
-
-# Colors
-GREEN		= \033[0;32m
-YELLOW		= \033[0;33m
-RED		= \033[0;31m
-NC		= \033[0m
-
-all: setup build up
-
-setup:
-	@echo "$(YELLOW)Creating data directories...$(NC)"
-	@mkdir -p $(DATA_DIR)/wordpress
-	@mkdir -p $(DATA_DIR)/mariadb
-	@echo "$(GREEN)Data directories created at $(DATA_DIR)$(NC)"
-
-build:
-	@echo "$(YELLOW)Building Docker images...$(NC)"
-	@docker compose -f $(COMPOSE_FILE) build
-	@echo "$(GREEN)Build complete!$(NC)"
-
-up:
-	@echo "$(YELLOW)Starting containers...$(NC)"
-	@docker compose -f $(COMPOSE_FILE) up -d
-	@echo "$(GREEN)Containers started!$(NC)"
+all:
+	@printf "Launch configuration ${name}...\n"
+	@bash srcs/requirements/wordpress/tools/make_dir.sh
+	@docker compose -f ./srcs/docker-compose.yml --env-file srcs/.env up -d --build
 
 down:
-	@echo "$(YELLOW)Stopping containers...$(NC)"
-	@docker compose -f $(COMPOSE_FILE) down
-	@echo "$(GREEN)Containers stopped!$(NC)"
+	@printf "Stopping configuration ${name}...\n"
+	@docker compose -f ./srcs/docker-compose.yml --env-file srcs/.env down
 
-start:
-	@docker compose -f $(COMPOSE_FILE) start
-
-stop:
-	@docker compose -f $(COMPOSE_FILE) stop
-
-restart: down up
-
-logs:
-	@docker compose -f $(COMPOSE_FILE) logs -f
-
-ps:
-	@docker compose -f $(COMPOSE_FILE) ps
+re: down all
 
 clean: down
-	@echo "$(YELLOW)Removing containers and networks...$(NC)"
-	@docker compose -f $(COMPOSE_FILE) down -v --remove-orphans
-	@echo "$(GREEN)Cleanup complete!$(NC)"
+	@printf "Cleaning configuration ${name}...\n"
+	@docker system prune -a
+	@sudo rm -rf ~/data/wordpress/*
+	@sudo rm -rf ~/data/mariadb/*
 
 fclean: clean
-	@echo "$(RED)Removing all Docker data...$(NC)"
-	@docker system prune -af
-	@sudo rm -rf $(DATA_DIR)
-	@echo "$(GREEN)Full cleanup complete!$(NC)"
+	@printf "Total clean of all docker configurations\n"
+	@docker stop $$(docker ps -qa) 2>/dev/null || true
+	@docker rm $$(docker ps -qa) 2>/dev/null || true
+	@docker rmi -f $$(docker images -qa) 2>/dev/null || true
+	@docker volume rm $$(docker volume ls -q) 2>/dev/null || true
+	@docker network rm $$(docker network ls -q) 2>/dev/null || true
 
-re: fclean all
-
-status:
-	@echo "$(YELLOW)=== Docker Status ===$(NC)"
-	@docker compose -f $(COMPOSE_FILE) ps
-	@echo ""
-	@echo "$(YELLOW)=== Docker Images ===$(NC)"
-	@docker images | grep -E "nginx|wordpress|mariadb" || true
-	@echo ""
-	@echo "$(YELLOW)=== Docker Volumes ===$(NC)"
-	@docker volume ls | grep -E "wordpress|mariadb" || true
-
-.PHONY: all setup build up down start stop restart logs ps clean fclean re status
+.PHONY: all down re clean fclean
