@@ -2,14 +2,14 @@
 
 cd /var/www/html
 
-# 1. Download WP-CLI if missing
+# Fetch the WP-CLI tool when it is not yet installed
 if [ ! -f "/usr/local/bin/wp" ]; then
     wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
     chmod +x wp-cli.phar
     mv wp-cli.phar /usr/local/bin/wp
 fi
 
-# 2. WAIT for MariaDB to be ready (The Fix!)
+# Block until the database server is reachable
 echo "Waiting for MariaDB to start..."
 while ! mariadb -h$MYSQL_HOSTNAME -u$MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABASE --silent; do
     echo "MariaDB is not ready yet. Waiting 5 seconds..."
@@ -17,7 +17,7 @@ while ! mariadb -h$MYSQL_HOSTNAME -u$MYSQL_USER -p$MYSQL_PASSWORD $MYSQL_DATABAS
 done
 echo "MariaDB is connected!"
 
-# 3. Install WordPress
+# Run the full WordPress setup only on the very first boot
 if [ ! -f "wp-config.php" ]; then
     echo "Downloading WordPress..."
     wp core download --allow-root
@@ -48,6 +48,6 @@ if [ ! -f "wp-config.php" ]; then
         --allow-root
 fi
 
-# 4. Start PHP-FPM
+# Hand off to PHP-FPM as the foreground process
 echo "Starting PHP-FPM..."
 exec /usr/sbin/php-fpm7.4 -F
