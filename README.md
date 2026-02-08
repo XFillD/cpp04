@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by jstudnic.*
+*This project has been created as part of the 42 curriculum by fhauba.*
 
 # Inception
 
@@ -22,7 +22,7 @@ Each service runs in its own dedicated container, isolated from the others, comm
     make
     ```
 4.  **Access:**
-    Open `https://jstudnic.42.fr` in your browser.
+    Open `https://fhauba.42.fr` in your browser.
 
 ## Project Description & Architecture Choices
 
@@ -40,7 +40,7 @@ Each service runs in its own dedicated container, isolated from the others, comm
 
 ### Docker Volumes vs Bind Mounts
 * **Bind Mounts:** Directly link a folder on your Host (e.g., `/home/user/desktop`) to a folder in the container. They depend on the specific file structure of the host machine.
-* **Docker Volumes:** Managed entirely by Docker. They are stored in a specific part of the host filesystem (usually `/var/lib/docker/volumes/`). They are safer, easier to back up, and work the same on any OS. In this project, we used **Named Volumes** with a custom driver device option to store data in `/home/jstudnic/data` as required.
+* **Docker Volumes:** Managed entirely by Docker. They are stored in a specific part of the host filesystem (usually `/var/lib/docker/volumes/`). They are safer, easier to back up, and work the same on any OS. In this project, we used **Named Volumes** with a custom driver device option to store data in `/home/fhauba/data` as required.
 
 ## Resources
 * [Docker Documentation](https://docs.docker.com/)

@@ -50,14 +50,14 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/jstudnic/data/mariadb
+      device: /home/fhauba/data/mariadb
 
   wordpress_vol:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/jstudnic/data/wordpress
+      device: /home/fhauba/data/wordpress
 
 networks:
   inception:

@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ ! -d "/home/jstudnic/data" ]; then
-        mkdir -p /home/jstudnic/data/mariadb
-        mkdir -p /home/jstudnic/data/wordpress
+if [ ! -d "/home/fhauba/data" ]; then
+        mkdir -p /home/fhauba/data/mariadb
+        mkdir -p /home/fhauba/data/wordpress
 fi

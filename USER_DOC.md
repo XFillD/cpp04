@@ -30,7 +30,7 @@ As a user, you can control the project using the provided `Makefile` at the root
 ## 3. Accessing the Website
 Once the command `make` has finished running:
 1.  Open your web browser (Firefox/Chrome).
-2.  Navigate to: **[https://jstudnic.42.fr](https://jstudnic.42.fr)**
+2.  Navigate to: **[https://fhauba.42.fr](https://fhauba.42.fr)**
 3.  **Note:** You will see a "Security Warning" because we are using a self-signed certificate. You must accept the risk/advanced options to proceed.
 
 ## 4. Credentials
