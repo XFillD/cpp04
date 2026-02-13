@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# First-time setup: bootstrap the data directory if no system tables exist
-if [ ! -d "/var/lib/mysql/mysql" ]; then
+# First-time setup: bootstrap the data directory if the custom marker is absent
+if [ ! -f "/var/lib/mysql/.inception_initialized" ]; then
     echo "Initializing MariaDB data directory..."
     mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
@@ -26,6 +26,9 @@ FLUSH PRIVILEGES;
 EOF
 
     echo "Database setup complete."
+
+    # Leave a marker so we know init has been completed
+    touch /var/lib/mysql/.inception_initialized
 
     # Gracefully stop the bootstrap server before launching for real
     mysqladmin -u root -p"${MYSQL_ROOT_PASSWORD}" shutdown

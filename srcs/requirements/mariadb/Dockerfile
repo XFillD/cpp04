@@ -1,7 +1,8 @@
 FROM debian:bullseye
 
 RUN apt-get update && apt-get install -y mariadb-server \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/lib/mysql/*
 
 # Prepare the runtime directory used by the MariaDB socket
 RUN mkdir -p /var/run/mysqld \
